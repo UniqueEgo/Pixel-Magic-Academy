@@ -1,0 +1,152 @@
+/* General styles */
+* {
+  box-sizing: border-box;
+  font-family: "Pixelify Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #e6def5;
+  display: flex;
+  font-family: "Pixelify Sans", sans-serif;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: #fff;
+  border: 3px solid #c2b7e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #c2b7e0;
+  text-align: center;
+  width: 650px;
+  height: auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: #b6a0e6;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 3px;
+}
+
+.header h1 {
+  font-size: 40px;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.label {
+  display: block;
+  text-align: left;
+  font-family: "Pixelify Sans", sans-serif;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: 30px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #c2b7e0;
+  border-radius: 4px;
+  font-size: 30px;
+  font-family: "Pixelify Sans", sans-serif;
+  text-transform: uppercase;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #b38cf7;
+  background-color: #f3eaff;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.enter {
+  background-color: #b38cf7;
+  color: white;
+  font-family: "Pixelify Sans", sans-serif;
+
+}
+
+.enter:hover {
+  background-color: #a274f1;
+  transform: scale(1.03);
+}
+
+.enroll {
+  background-color: #b5e0d1;
+  color: #333;
+  font-family: "Pixelify Sans", sans-serif;
+}
+
+.enroll:hover {
+  background-color: #a4d5c3;
+  transform: scale(1.03);
+}
+
+
+.icon {
+  height: 3em; /* same height as the text */
+  width: auto; /* keep image proportion */
+  vertical-align: middle;
+}
+
+
+/* Wizard image */
+.wizard {
+  position: fixed;
+  bottom: -10px;
+  right: 30px;
+  width: 500px;
+  animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 0px #b38cf7); }
+  50% { filter: drop-shadow(0 0 12px #b38cf7); }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .card {
+    width: 90%;
+  }
+
+  .wizard {
+    width: 100px;
+    right: 10px;
+  }
+}

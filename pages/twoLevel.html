@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic Academy</title>
+  <link rel="stylesheet" href="../css/oneLevel.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>
+          <img src="../src/hat.png" alt="hat" class="icon">
+          AKADEMIYA
+          <img src="../src/wand.png" alt="wand" class="icon">
+        </h1>
+      </div>
+
+      <form id="academyForm">
+        <label for="E-MESS" class="label">📜E-MESS:</label>
+        <input type="text" id="eMess" placeholder="ENTER YOUR E-MESS">
+
+        <label for="CONFIRME-MESS" class="label">🔮 CONFIRM E-MESS:</label>
+        <input type="text" id="CONFIRME-MESS" placeholder="CONFIRM YOUR E-MESS">
+
+        <label for="homeAddress" class="label"> 🌀 ORB NUMBER:</label>
+        <input type="text" id="homeAddress" placeholder="INPUT YOUR ORB NUMBER">
+
+        <label for="homeAddress" class="label">🔮 CONFIRM ORB NUMBER:</label>
+        <input type="text" id="homeAddress" placeholder="CONFIRM YOUR ORB NUMBER">
+
+
+        <button type="submit" class="btn enter">⭐ STEP UP!!! ⭐</button>
+      </form>
+    </div>
+  </div>
+
+<div class="wizard-box">
+  <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
+  <div id="wizard-dialogue" class="dialogue"></div>
+</div>
+
+
+  <script src="/js/oneLevel.js"></script>
+</body>
+</html>

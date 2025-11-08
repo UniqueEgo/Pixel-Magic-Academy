@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic Academy</title>
+  <link rel="stylesheet" href="../css/enroll.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>
+          <img src="../src/hat.png" alt="hat" class="icon">
+          AKADEMIYA
+          <img src="../src/wand.png" alt="wand" class="icon">
+        </h1>
+      </div>
+
+      <form id="academyForm">
+        <label for="mageName" class="label">📘 FIRST NAME:</label>
+        <input type="text" id="mageName" placeholder="ENTER YOUR FIRST NAME">
+
+        <label for="codeSpell" class="label">🔮 LAST NAME:</label>
+        <input type="text" id="codeSpell" placeholder="ENTER YOUR LAST NAME">
+
+        <label for="homeAddress" class="label">🏠 ADDRESS:</label>
+        <input type="text" id="homeAddress" placeholder="ENTER YOUR HOME ADDRESS">
+
+        <button type="submit" class="btn enter" id="oneLevelbutton">⭐ NEXT STEP!!! ⭐</button>
+      </form>
+    </div>
+  </div>
+
+<div class="wizard-box">
+  <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
+  <div id="wizard-dialogue" class="dialogue"></div>
+</div>
+
+
+  <script src="/js/enroll.js"></script>
+</body>
+</html>
