@@ -35,9 +35,9 @@ function showWizardDialogue(message) {
 }
 });
 
-  const twoLevelBtn = document.getElementById("enrollBtn");
+  const twoLevelBtn = document.getElementById("twoLevelbutton");
   if (twoLevelBtn) {
-    enrollBtn.addEventListener("click", function () {
-      window.location.href = "pages/enroll.html";
+    twoLevelBtn.addEventListener("click", function () {
+      window.location.href = "../pages/twoLevel.html";
     });
   }
