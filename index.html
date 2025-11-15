@@ -20,12 +20,12 @@
         <label for="mageName" class="label">
           📘 MAGE NAME:
         </label>
-        <input type="text" id="mageName" placeholder="ENTER YOUR NAME" required>
+        <input type="text" id="mageName" placeholder="ENTER YOUR NAME" autocomplete="off"  required>
 
         <label for="codeSpell" class="label">
           🔮 CODE SPELL:
         </label>
-        <input type="text" id="codeSpell" placeholder="NAME OF THE SPELL" required>
+        <input type="text" id="codeSpell" placeholder="NAME OF THE SPELL" autocomplete="off" required>
 
         <button type="submit" class="btn enter">⭐ ENTER ACADEMY</button>
         <button type="button" class="btn enroll" id="enrollBtn">📖 ENROLL AS STUDENT</button>
@@ -33,7 +33,21 @@
     </div>
   </div>
 
+  <div id="dialogue-overlay" class="hidden">
+    <div class="overlay-bg"></div>
+
+    <div class="wizard-focus">
+      <img src="/src/wizard.png" class="wizard-big">
+    </div>
+
+    <div id="dialogue-box">
+      <p id="dialogue-text"></p>
+      <p class="click-note">(click to continue)</p>
+    </div>
+  </div>
+
   <img src="/src/wizard.png" alt="wizard" class="wizard">
+
 
 <script src="/js/index.js"></script>
 </body>

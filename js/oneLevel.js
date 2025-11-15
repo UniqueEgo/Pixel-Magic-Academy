@@ -1,43 +1,48 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const form = document.getElementById("academyForm");
-  const wizardNormal = document.querySelector(".wizard.normal");
-  const wizardTalking = document.querySelector(".wizard.talking");
-  const dialogue = document.getElementById("wizard-dialogue");
+  const wizard = document.getElementById ("wizard");
+  const dialogue = document.getElementById ("wizard-dialogue");
+
 
   form.addEventListener("submit", function (e) {
-    e.preventDefault(); 
-    
-    const first = document.getElementById("mageName").value.trim();
-    const last = document.getElementById("codeSpell").value.trim();
-    const address = document.getElementById("homeAddress").value.trim();
+    e.preventDefault();
 
-    if (!first || !last || !address) {
-      showWizardDialogue("⚠️ NO YOU FOOL! ALL THE FIELDS MUST BE FILLED!");
+    const eMess = document.getElementById("eMess").value.trim();
+    const confirmEMess = document.getElementById("CONFIRME-MESS").value.trim();
+    const orb = document.getElementById("ORB").value.trim();
+    const conOrb= document.getElementById("CON-ORB").value.trim();
+  
+    if (!eMess || !confirmEMess || !orb || !conOrb) {
+      showWizardDialogue("⚠️ YOU CANNOT PASS! FILL ALL THE FIELDS!");
+      return;
+    }
+    
+    if (eMess !== confirmEMess) {
+      showWizardDialogue("✉️ YOUR E-MESS DOES NOT MATCH, YOU FOOL!");
+      return;
+    }
+    
+    if (orb !== conOrb) {
+      showWizardDialogue("🌀 YOUR ORB NUMBERS DO NOT MATCH!");
       return;
     }
 
-    alert(`✨ Welcome, ${first} ${last} of ${address}! Proceeding...`);
+    window.location.href = "../pages/twoLevel.html";
   });
 
-function showWizardDialogue(message) {
-  const wizard = document.getElementById("wizard");
-  wizard.src = "/src/evil-laugh-wizard-talk.png"; 
-  wizard.classList.add("talking");
+  function showWizardDialogue(message) {
+    wizard.src = "../src/evil-laugh-wizard-talk.png";
+    wizard.classList.add("talking");
 
-  dialogue.textContent = message;
-  dialogue.style.display = "block";
+    dialogue.textContent = message;
+    dialogue.style.display = "block";
 
-  setTimeout(() => {
-    dialogue.style.display = "none";
-    wizard.src = "/src/wizard.png"; 
-    wizard.classList.remove("talking");
-  }, 3000);
-}
-});
-
-  const twoLevelBtn = document.getElementById("twoLevelbutton");
-  if (twoLevelBtn) {
-    twoLevelBtn.addEventListener("click", function () {
-      window.location.href = "../pages/twoLevel.html";
-    });
+    setTimeout(()=>
+    {
+      dialogue.style.display = "none";
+      wizard.src = "../src/wizard.png";
+      wizard.classList.remove("talking");
+    }, 3000);
   }
+});
