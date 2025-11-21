@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magic Academy</title>
+  <title>Magic Academy - Orb Connections</title>
   <link rel="stylesheet" href="../css/oneLevel.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -15,35 +15,33 @@
       <div class="header">
         <h1>
           <img src="../src/hat.png" alt="hat" class="icon">
-          AKADEMIYA
+          ORB CONNECTIONS
           <img src="../src/wand.png" alt="wand" class="icon">
         </h1>
       </div>
 
       <form id="academyForm">
-        <label for="E-MESS" class="label">📜E-MESS:</label>
-        <input type="text" id="eMess" placeholder="ENTER YOUR E-MESS" autocomplete="off" >
+        <label for="eMess" class="label">📜 E-MESS:</label>
+        <input type="text" id="eMess" placeholder="ENTER YOUR E-MESS" autocomplete="off">
 
         <label for="CONFIRME-MESS" class="label">🔮 CONFIRM E-MESS:</label>
-        <input type="text" id="CONFIRME-MESS" placeholder="CONFIRM YOUR E-MESS" autocomplete="off" >
+        <input type="password" id="CONFIRME-MESS" placeholder="CONFIRM YOUR E-MESS" autocomplete="off">
 
-        <label for="ORB" class="label"> 🌀 ORB NUMBER:</label>
-        <input type="text" id="ORB" placeholder="INPUT YOUR ORB NUMBER" autocomplete="off" >
+        <label for="ORB" class="label">🌀 ORB NUMBER:</label>
+        <input type="text" id="ORB" placeholder="INPUT YOUR ORB NUMBER" autocomplete="off">
 
-        <label for="CONFIRM-ORB" class="label">🔮 CONFIRM ORB NUMBER:</label>
-        <input type="text" id="CON-ORB" placeholder="CONFIRM YOUR ORB NUMBER" autocomplete="off" >
-
+        <label for="CON-ORB" class="label">🔮 CONFIRM ORB NUMBER:</label>
+        <input type="text" id="CON-ORB" placeholder="CONFIRM YOUR ORB NUMBER" autocomplete="off">
 
         <button type="submit" class="btn enter" id="twoLevelbutton">⭐ STEP UP!!! ⭐</button>
       </form>
     </div>
   </div>
 
-<div class="wizard-box">
-  <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
-  <div id="wizard-dialogue" class="dialogue"></div>
-</div>
-
+  <div class="wizard-box">
+    <img src="../src/wizard.png" alt="wizard" class="wizard" id="wizard">
+    <div id="wizard-dialogue" class="dialogue"></div>
+  </div>
 
   <script src="../js/oneLevel.js"></script>
 </body>

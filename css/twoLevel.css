@@ -18,7 +18,31 @@ body {
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.rules-panel {
+  background-color: #f3eaff;
+  border: 3px solid #b38cf7;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 300px;
+  font-family: "Pixelify Sans", sans-serif;
+}
+
+.rules-panel h2 {
+  color: #6a2eb9;
+  font-size: 28px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.rules-panel ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  font-size: 20px;
+  color: #333;
 }
 
 .card {

@@ -5,46 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Magic Academy</title>
   <link rel="stylesheet" href="../css/twoLevel.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
+  
   <div class="container">
+      <div class="rules-panel">
+        <h2>🧙‍♂️ Code Spell Rules</h2>
+        <ul>
+          <li>No "0"s</li>
+          <li>No vowels</li>
+          <li>Minimum 15 characters</li>
+          <li>At least one special character</li>
+          <li>7th character = "O"</li>
+          <li>13th character = "y"</li>
+          <li>Must include your Hero Name</li>
+        </ul>
+      </div>
+
     <div class="card">
       <div class="header">
         <h1>
           <img src="../src/hat.png" alt="hat" class="icon">
-          AKADEMIYA
+          ARCANE SECURITY
           <img src="../src/wand.png" alt="wand" class="icon">
         </h1>
       </div>
 
       <form id="academyForm">
-        <label for="E-MESS" class="label">📜E-MESS:</label>
-        <input type="text" id="eMess" placeholder="ENTER YOUR E-MESS" autocomplete="off" >
+        <label for="mageName" class="label">🧙‍♂️ MAGE NAME:</label>
+        <input type="text" id="mageName" placeholder="ENTER YOUR MAGE NAME" maxlength="6" autocomplete="off">
 
-        <label for="CONFIRME-MESS" class="label">🔮 CONFIRM E-MESS:</label>
-        <input type="text" id="CONFIRME-MESS" placeholder="CONFIRM YOUR E-MESS" autocomplete="off" >
+        <label for="codeSpell" class="label">📜 CODE SPELL:</label>
+        <input type="password" id="codeSpell" placeholder="WHAT IS YOUR CODE SPELL" autocomplete="off">
 
-        <label for="homeAddress" class="label"> 🌀 ORB NUMBER:</label>
-        <input type="text" id="homeAddress" placeholder="INPUT YOUR ORB NUMBER" autocomplete="off" >
+        <label for="confirmCodeSpell" class="label">🔮 CONFIRM CODE SPELL:</label>
+        <input type="password" id="confirmCodeSpell" placeholder="CONFIRM YOUR SPELL" autocomplete="off">
 
-        <label for="homeAddress" class="label">🔮 CONFIRM ORB NUMBER:</label>
-        <input type="text" id="homeAddress" placeholder="CONFIRM YOUR ORB NUMBER" autocomplete="off" >
-
-
-        <button type="submit" class="btn enter">⭐ STEP UP!!! ⭐</button>
+        <button type="submit" class="btn enter">⭐ CAST SPELL!!! ⭐</button>
       </form>
     </div>
   </div>
 
-<div class="wizard-box">
-  <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
-  <div id="wizard-dialogue" class="dialogue"></div>
-</div>
+  <div class="wizard-box">
+    <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
+    <div id="wizard-dialogue" class="dialogue"></div>
+  </div>
 
-
-  <script src="/js/twoLevel.js"></script>
+  <script src="../js/twoLevel.js"></script>
 </body>
 </html>
