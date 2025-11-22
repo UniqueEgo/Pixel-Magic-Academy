@@ -19,6 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
     alert(`✨ Welcome, ${first} ${last} of ${address}! Proceeding...`);
   });
 
+    document.getElementById("backBtn").addEventListener("click", () => {
+    history.back();
+  });
+      document.getElementById("restartbtn").addEventListener("click", () => {
+    location.reload();
+  });
+
+
 function showWizardDialogue(message) {
   const wizard = document.getElementById("wizard");
   wizard.src = "/src/evil-laugh-wizard-talk.png"; 
