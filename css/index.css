@@ -182,7 +182,7 @@ input:focus {
 }
 
 .wizard-big {
-  width: 450px;
+  width: 400px;
   animation: float 3s ease-in-out infinite;
 }
 
