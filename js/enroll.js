@@ -28,24 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    alert(`✨ Welcome, ${first} ${last} of ${address}! Proceeding...`);
-  });
-
-    document.getElementById("backBtn").addEventListener("click", () => {
-    history.back();
-  });
-      document.getElementById("restartbtn").addEventListener("click", () => {
-    location.reload();
-  });
-
-
-function showWizardDialogue(message) {
-  const wizard = document.getElementById("wizard");
-  wizard.src = "/src/evil-laugh-wizard-talk.png"; 
-  wizard.classList.add("talking");
-
-  dialogue.textContent = message;
-  dialogue.style.display = "block";
+    const nextLine = dialogueQueue.shift();
+    wizard.src = "../src/evil-laugh-wizard-talk.png";
+    wizard.classList.add("talking");
+    dialogue.textContent = nextLine;
+    dialogue.style.display = "block";
 
     // If this was the last line of the address dialogue, convert input
     if (!addressConverted && addressTalked && dialogueQueue.length === 0) {

@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ]);
 
     setTimeout(() => {
-      window.location.href = "../pages/thrirdLevel.html";
+      window.location.href = "../pages/thirdLevel.html";
     }, 1500);
   });
 });
