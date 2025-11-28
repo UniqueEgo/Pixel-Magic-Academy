@@ -17,18 +17,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Elements
   const form = document.getElementById("academyForm");
   const submitBtn = document.getElementById("twoLevelbutton");
+  
+  // Overlay Elements
   const overlay = document.getElementById("dialogue-overlay");
   const overlayText = document.getElementById("dialogue-text-enroll");
 
   // Trackers
   let gmessAttempts = 0;
   let orbAttempts = 0;
-  let confirmOrbAttempts = 0; // Tracks failures on the final step
+  let confirmOrbAttempts = 0; 
   
-  // State Flags
+  // State Flags (For the button)
   let isGmessValid = false;
   let isGmessConfirmed = false;
   let isOrbValid = false;
+  let isOrbConfirmed = false;
 
   // Disable button initially
   submitBtn.disabled = true;
@@ -51,6 +54,18 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.addEventListener("click", advance);
   }
 
+  // --- BUTTON STATE UPDATER ---
+  function updateButtonState() {
+    // Only unlock if ALL steps are valid
+    if (isGmessValid && isGmessConfirmed && isOrbValid && isOrbConfirmed) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "⭐ STEP UP!!! ⭐";
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "🔒 COMPLETE TASKS";
+    }
+  }
+
   // ==========================================
   //  1. VALIDATION FUNCTIONS
   // ==========================================
@@ -64,24 +79,29 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!val) {
         if(showError) playWizardDialogue(["“The field is empty, fool!”"], 'angry');
         isGmessValid = false;
+        updateButtonState();
         return false;
     }
 
     if (pattern.test(val)) {
       isGmessValid = true;
+      updateButtonState();
       return true;
     } else {
       isGmessValid = false;
+      updateButtonState();
+      
       if (showError) {
         gmessAttempts++;
+        // Don't clear input immediately, let them fix it
         if (gmessAttempts < 3) {
             playWizardDialogue(["“That is NOT a valid G-Mess!”"], 'angry');
-            input.value = "";
         } else {
             playWizardDialogue(["“You are testing my patience!”"], 'angry', () => {
                 playSystemOverlay(["Just add @gmess.orb like how gmail works in your world works lol"]);
             });
-            input.value = "";
+            // Only clear on the big fail to force reset
+            input.value = ""; 
         }
       }
       return false;
@@ -96,11 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!confirm) {
         if(showError) playWizardDialogue(["“Confirm it first! You haven't typed anything.”"], 'angry');
         isGmessConfirmed = false;
+        updateButtonState();
         return false;
     }
 
     if (confirm === original) {
         isGmessConfirmed = true;
+        updateButtonState();
         return true;
     } else {
         if(showError) {
@@ -108,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("CONFIRME-MESS").value = "";
         }
         isGmessConfirmed = false;
+        updateButtonState();
         return false;
     }
   }
@@ -120,39 +143,90 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!val) {
         if(showError) playWizardDialogue(["“Add orb number first! It is empty.”"], 'angry');
         isOrbValid = false;
+        updateButtonState();
         return false;
     }
 
+    // Rule 1: Repeated Digits
     const uniqueDigits = new Set(val.split('')).size;
     if (uniqueDigits === 1 && val.length > 1) {
       if(showError) {
         playWizardDialogue(["“A single repeated digit? Pathetic!”"], 'angry', () => {
             orbAttempts = 0;
-            input.value = "";
+            input.value = ""; // Clear for troll reset
             playSystemOverlay(["You cant have one number code lol, wasnt that obvious?"]);
         });
       }
       isOrbValid = false;
+      updateButtonState();
       return false;
     }
 
+    // Rule 2: 11 Digits
     if (/^\d{11}$/.test(val)) {
       isOrbValid = true;
+      updateButtonState();
       return true;
     } else {
       isOrbValid = false;
+      updateButtonState();
+      
       if(showError) {
         orbAttempts++;
         if (orbAttempts < 3) {
             playWizardDialogue(["“It must be exactly 11 digits!”"], 'angry');
+            // ✨ FIX: Do NOT clear input here. Let them fix the number.
         } else {
             playWizardDialogue(["“Why do you struggle so much?”"], 'sus', () => {
                 playSystemOverlay(["Oh yeah I forgot to tell you that the confirmation is the reverse of your orb number"]);
             });
+            input.value = ""; // Clear only on 3rd fail
         }
-        input.value = "";
       }
       return false;
+    }
+  }
+
+  // D. Check Confirm Orb (Reverse)
+  function validateConfirmOrb(showError = true) {
+    const orbVal = document.getElementById("ORB").value.trim();
+    const confirmVal = document.getElementById("CON-ORB").value.trim();
+    const input = document.getElementById("CON-ORB");
+
+    if (!confirmVal) {
+        isOrbConfirmed = false;
+        updateButtonState();
+        if(showError) playWizardDialogue(["“Confirm your Orb Number first!”"], 'angry');
+        return false;
+    }
+
+    const reversedOrb = orbVal.split('').reverse().join('');
+
+    if (confirmVal === reversedOrb) {
+        isOrbConfirmed = true;
+        updateButtonState(); // This will finally unlock the button!
+        return true;
+    } else {
+        isOrbConfirmed = false;
+        updateButtonState();
+
+        if (showError) {
+            confirmOrbAttempts++;
+            input.value = ""; // Clear input to annoy them
+
+            if (confirmOrbAttempts === 1) {
+                playWizardDialogue(["“Ohh... is it hard because it was bullets?”", "“Or you just don't know how to do it?”"], 'sus');
+            } else if (confirmOrbAttempts === 2) {
+                playWizardDialogue(["“Is it really that hard?”"], 'sus');
+            } else if (confirmOrbAttempts === 3) {
+                playWizardDialogue(["“Oh come on, SERIOUSLY?!”"], 'angry', () => {
+                    playSystemOverlay(["It should be the reverse of his number."]);
+                });
+            } else {
+                playSystemOverlay(["Oh can you be better?", `Your orb confirmation should be: ${reversedOrb}`]);
+            }
+        }
+        return false;
     }
   }
 
@@ -161,25 +235,17 @@ document.addEventListener("DOMContentLoaded", () => {
   //  2. STRICT CLICK LOCKING
   // ==========================================
 
-  // 1. User clicks "CONFIRM G-MESS"
   document.getElementById("CONFIRME-MESS").addEventListener("focus", function() {
-    if (!validateGmess(true)) this.blur(); 
+    // Only block if prev step is invalid (don't show error dialogue again on focus, blur handled it)
+    if (!validateGmess(false)) this.blur(); 
   });
 
-  // 2. User clicks "ORB NUMBER"
   document.getElementById("ORB").addEventListener("focus", function() {
-    if (!validateConfirmGmess(true)) this.blur();
+    if (!validateConfirmGmess(false)) this.blur();
   });
 
-  // 3. User clicks "CONFIRM ORB"
   document.getElementById("CON-ORB").addEventListener("focus", function() {
-    if (!validateOrb(true)) {
-        this.blur();
-    } else {
-        // ✨ NEW: Unlock the button immediately when they reach the last step!
-        submitBtn.disabled = false;
-        submitBtn.innerText = "⭐ STEP UP!!! ⭐";
-    }
+    if (!validateOrb(false)) this.blur();
   });
 
 
@@ -187,34 +253,27 @@ document.addEventListener("DOMContentLoaded", () => {
   //  3. LISTENERS
   // ==========================================
   
-  // Validate fields when leaving them
-  document.getElementById("eMess").addEventListener("blur", () => validateGmess(false));
+  // Validation on Blur (Leaving the field)
+  document.getElementById("eMess").addEventListener("blur", () => validateGmess(true));
   document.getElementById("CONFIRME-MESS").addEventListener("blur", () => validateConfirmGmess(true));
   document.getElementById("ORB").addEventListener("blur", () => validateOrb(true));
+  document.getElementById("CON-ORB").addEventListener("blur", () => validateConfirmOrb(true));
+  
+  // Real-time check to light up button
+  document.getElementById("CON-ORB").addEventListener("input", () => validateConfirmOrb(false));
 
 
   // ==========================================
-  //  4. SUBMIT LOGIC (The Main Game)
+  //  4. SUBMIT LOGIC
   // ==========================================
   form.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    // 1. Basic Empty Check (Shouldn't trigger often due to locking, but good safety)
     const orb = document.getElementById("ORB").value.trim();
     const conOrb = document.getElementById("CON-ORB").value.trim();
     
-    // ✨ Scenario A: Clicked Submit but Confirm Orb is Empty
-    if (conOrb === "") {
-        playWizardDialogue([
-            "“Tired already?”", 
-            "“Confirm it first.”"
-        ], 'calm');
-        return;
-    }
-
-    // 2. Reverse Check
+    // Double Check
     const reversedOrb = orb.split('').reverse().join('');
-    const input = document.getElementById("CON-ORB");
 
     if (conOrb === reversedOrb) {
         // ✅ SUCCESS
@@ -229,37 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "../pages/twoLevel.html";
             });
         });
-
-    } else {
-        // ❌ FAIL SEQUENCE (3 Tries)
-        confirmOrbAttempts++;
-        input.value = ""; // Clear bad input
-
-        if (confirmOrbAttempts === 1) {
-            playWizardDialogue([
-                "“Ohh... is it hard because it was bullets?”",
-                "“Or you just don't know how to do it?”"
-            ], 'sus');
-        } 
-        else if (confirmOrbAttempts === 2) {
-            playWizardDialogue([
-                "“Is it really that hard?”"
-            ], 'sus');
-        } 
-        else if (confirmOrbAttempts === 3) {
-            playWizardDialogue([
-                "“Oh come on, SERIOUSLY?!”"
-            ], 'angry', () => {
-                playSystemOverlay(["It should be the reverse of his number."]);
-            });
-        } 
-        else {
-            // 4th+ Try (Give Answer)
-            playSystemOverlay([
-               "Oh can you be better?",
-               `Your orb confirmation should be: ${reversedOrb}`
-            ]);
-        }
     }
   });
   
