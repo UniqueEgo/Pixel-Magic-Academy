@@ -1,31 +1,28 @@
-// --- 🧠 SMART PATH DETECTION ---
-const isPagesFolder = window.location.pathname.includes("/pages/");
-const pathPrefix = isPagesFolder ? "../" : "./";
-
-// --- CONFIGURATION: IMAGE PATHS ---
+// --- CONFIGURATION: IMAGE PATHS (Absolute Paths) ---
+// Using "/src/..." ensures it works from index.html AND pages/enroll.html
 const WIZARD_ASSETS = {
   // 1. CALM MODE
-  calmIdle: pathPrefix + "src/wizard-idle.png",
+  calmIdle: "/src/wizard-idle.png",
   calmFrames: [
-    pathPrefix + "src/calm-talking.png", 
-    pathPrefix + "src/wizard-idle.png",
-    pathPrefix + "src/calm-open.png"
+    "/src/calm-talking.png", 
+    "/src/wizard-idle.png",
+    "/src/calm-open.png"
   ],
   
   // 2. ANGRY MODE
-  angryIdle: pathPrefix + "src/angry-close.png",
+  angryIdle: "/src/angry-close.png",
   angryFrames: [
-    pathPrefix + "src/angry-talking.png",
-    pathPrefix + "src/angry-close.png",
-    pathPrefix + "src/angry-open.png"
+    "/src/angry-talking.png",
+    "/src/angry-close.png",
+    "/src/angry-open.png"
   ],
 
-  // 3. SUS MODE (Suspicious)
-  susIdle: pathPrefix + "src/sus-close.png",
+  // 3. SUS MODE
+  susIdle: "/src/sus-close.png",
   susFrames: [
-    pathPrefix + "src/sus-talking.png",
-    pathPrefix + "src/sus-close.png",
-    pathPrefix + "src/sus-open.png"
+    "/src/sus-talking.png",
+    "/src/sus-close.png",
+    "/src/sus-open.png"
   ]
 };
 
@@ -86,35 +83,28 @@ function resetToIdle() {
 }
 
 // ==========================================
-//  DIALOGUE LOGIC (MERGED & FIXED)
+//  DIALOGUE LOGIC
 // ==========================================
 
-/**
- * Universal function to play wizard dialogue
- */
 function playWizardDialogue(lines, mood = 'calm', onComplete = null) {
   const { bubble, layer, container, wizard } = getElements();
   
-  // 1. ✨ NEW: Auto-close mobile keyboard if open
+  // Auto-close keyboard on mobile
   if (document.activeElement && document.activeElement.tagName === "INPUT") {
       document.activeElement.blur();
   }
 
-  // 2. Setup Variables
   wizardQueue = [...lines];
   currentMood = mood;
   onDialogueFinish = onComplete; 
   
-  // 3. Show Elements (This was missing in your second function!)
   container.style.display = "flex";
   layer.classList.remove("hidden");
   bubble.style.display = "block";
   container.style.zIndex = "100"; 
 
-  // 4. Start Sequence
   showNextLine();
 
-  // 5. Attach Listeners
   layer.onclick = showNextLine;
   wizard.onclick = showNextLine;
   wizard.style.cursor = "pointer"; 
@@ -123,19 +113,16 @@ function playWizardDialogue(lines, mood = 'calm', onComplete = null) {
 function showNextLine() {
   const { bubble, layer, wizard } = getElements();
 
-  // Check if we are done
   if (wizardQueue.length === 0) {
     bubble.style.display = "none";
     layer.classList.add("hidden");
     
-    // Clean up listeners
     layer.onclick = null; 
     wizard.onclick = null;
     wizard.style.cursor = "default";
     
     resetToIdle(); 
     
-    // Run callback if exists
     if (onDialogueFinish) {
         const callback = onDialogueFinish;
         onDialogueFinish = null; 
@@ -144,7 +131,6 @@ function showNextLine() {
     return;
   }
 
-  // Show text and animate
   const text = wizardQueue.shift();
   bubble.textContent = text;
 
