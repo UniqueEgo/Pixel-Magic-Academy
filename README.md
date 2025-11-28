@@ -1,9 +1,6 @@
-# Pixel-Magic-Academy
-"A frustration-based web game where a suspicious Wizard trolls you through increasingly impossible enrollment forms. Can you pass the Captcha?"
+# 🧙‍♂️ Pixel Magic Academy: The Isekai Enrollment
 
-# 🧙‍♂️ Magic Academy: The Isekai Enrollment
-
-> *"You have successfully possessed a body in a magical world... but before you can cast a single spell, you must survive the ultimate trial: BUREAUCRACY."*
+> *"A frustration-based web game where a suspicious Wizard trolls you through increasingly impossible enrollment forms. Can you pass the Captcha?"*
 
 **Magic Academy** is a web-based puzzle game inspired by *The Password Game*. You play as an "Isekai" protagonist who must navigate a magical enrollment process guarded by a suspicious, trolling Wizard and a helpful (but limited) "System" voice.
 
