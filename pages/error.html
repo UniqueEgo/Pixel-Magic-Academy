@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYSTEM FATAL ERROR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    /* --- RESET & LAYOUT --- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: #000; 
+      color: #0f0; 
+      font-family: "Pixelify Sans", monospace; 
+      overflow: hidden; /* No scrollbars allowed */
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+    }
+
+    /* --- CENTER BOX (Always on top) --- */
+    .center-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10; /* Stays above floating text */
+      
+      text-align: center;
+      background: rgba(0, 0, 0, 0.9); /* Dark bg to make text readable */
+      padding: 40px 60px;
+      border: 2px solid #0f0;
+      box-shadow: 0 0 20px #0f0, inset 0 0 20px rgba(0, 255, 0, 0.2);
+      min-width: 300px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px #003300;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 20px;
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 15px 30px;
+      font-family: "Pixelify Sans", monospace;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #0f0;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #fff;
+      box-shadow: 0 0 20px #fff;
+      transform: scale(1.05);
+    }
+
+    /* --- FLOATING CHARACTERS (Asteroids) --- */
+    .asteroid {
+      position: absolute;
+      font-size: 24px;
+      color: #005500; /* Darker green for depth */
+      user-select: none; /* Can't highlight them */
+      pointer-events: none; /* Can't click them */
+      white-space: nowrap;
+      will-change: transform; /* Performance optimization */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="center-box">
+    <h1>⚠️ SYSTEM FAILURE ⚠️</h1>
+    <p>Anomaly Detected. Universe Reset Required.</p>
+    <button onclick="window.location.href='../index.html'">RESTART SIMULATION</button>
+  </div>
+
+  <script>
+    const allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':\",./<>?";
+    const asteroids = [];
+
+    // Create 1 element for every character in the list
+    for (let i = 0; i < allChars.length; i++) {
+      const el = document.createElement("div");
+      el.classList.add("asteroid");
+      el.textContent = allChars[i];
+      document.body.appendChild(el);
+
+      // Random starting position
+      const x = Math.random() * (window.innerWidth - 30);
+      const y = Math.random() * (window.innerHeight - 30);
+
+      // Random velocity (speed & direction)
+      // Speed between -1.5 and 1.5 pixels per frame
+      const vx = (Math.random() - 0.5) * 3; 
+      const vy = (Math.random() - 0.5) * 3;
+
+      asteroids.push({ el, x, y, vx, vy });
+    }
+
+    function animate() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      asteroids.forEach(obj => {
+        // Update Position
+        obj.x += obj.vx;
+        obj.y += obj.vy;
+
+        // Bounce Logic (Horizontal)
+        if (obj.x <= 0 || obj.x >= w - 30) {
+          obj.vx *= -1; // Reverse direction
+        }
+
+        // Bounce Logic (Vertical)
+        if (obj.y <= 0 || obj.y >= h - 30) {
+          obj.vy *= -1; // Reverse direction
+        }
+
+        // Apply new position
+        obj.el.style.transform = `translate(${obj.x}px, ${obj.y}px)`;
+        
+        // Optional: Randomly brighten some characters like stars flickering
+        if(Math.random() > 0.99) {
+            obj.el.style.color = "#0f0"; // Bright Green
+            obj.el.style.textShadow = "0 0 10px #0f0";
+        } else if (Math.random() > 0.99) {
+            obj.el.style.color = "#005500"; // Dim Green
+            obj.el.style.textShadow = "none";
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // Start the loop
+    animate();
+  </script>
+
+</body>
+</html>

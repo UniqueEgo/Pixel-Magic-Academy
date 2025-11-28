@@ -1,99 +1,246 @@
+function enableAutoSave(fieldIds) {
+  fieldIds.forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const savedValue = sessionStorage.getItem(id);
+    if (savedValue) input.value = savedValue;
+    input.addEventListener("input", () => {
+      sessionStorage.setItem(id, input.value);
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  enableAutoSave(["mageName", "codeSpell"]);
+
   const form = document.getElementById("academyForm");
-  const wizard = document.getElementById("wizard");
-  const dialogue = document.getElementById("wizard-dialogue");
+  const submitBtn = document.getElementById("finalButton");
+  const overlay = document.getElementById("dialogue-overlay");
+  const overlayText = document.getElementById("dialogue-text-enroll");
 
-  let dialogueQueue = [];
+  // Trackers
+  let isNameValid = false;
+  let isCodeValid = false;
+  let confirmAttempts = 0; // ✨ NEW: Count how many times they failed confirm
 
-  function showWizardDialogue(lines) {
-    if (!Array.isArray(lines)) lines = [lines];
-    dialogueQueue = [...lines];
-    showNextDialogue();
-  }
+  submitBtn.disabled = true;
 
-  function showNextDialogue() {
-    if (dialogueQueue.length === 0) {
-      dialogue.style.display = "none";
-      wizard.src = "/src/wizard.png";
-      wizard.classList.remove("talking");
-      return;
+  // --- SYSTEM OVERLAY ---
+  function playSystemOverlay(lines, onComplete) {
+    let currentIndex = 0;
+    overlay.classList.remove("hidden");
+    function updateText() { overlayText.textContent = "(System): " + lines[currentIndex]; }
+    function advance() {
+      currentIndex++;
+      if (currentIndex < lines.length) updateText();
+      else {
+        overlay.classList.add("hidden");
+        overlay.removeEventListener("click", advance);
+        if (onComplete) onComplete();
+      }
     }
-    const nextLine = dialogueQueue.shift();
-    wizard.src = "/src/evil-laugh-wizard-talk.png";
-    wizard.classList.add("talking");
-    dialogue.textContent = nextLine;
-    dialogue.style.display = "block";
+    updateText();
+    overlay.addEventListener("click", advance);
   }
 
-  wizard.addEventListener("click", showNextDialogue);
+  // --- BUTTON STATE ---
+  function updateButtonState() {
+    // ✨ Unlock button if Name and Code are valid. 
+    // We DON'T check confirm here, so the user can click it and fail (Troll Mechanic).
+    if (isNameValid && isCodeValid) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "⭐ CAST SPELL!!! ⭐";
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "🔒 COMPLETE TASKS";
+    }
+  }
 
-  // ---- Mage Name Validation ----
-  function validateMageName() {
+  // --- INTRO ---
+  playSystemOverlay(["Level Two: Arcane Security.", "Create a spell that cannot be broken."]);
+
+
+  // ==========================================
+  //  1. VALIDATION LOGIC
+  // ==========================================
+
+  // A. Check Name
+  function validateName(showError = true) {
     const name = document.getElementById("mageName").value.trim();
-    if (name.length > 6) showWizardDialogue("“Too long! Are you writing your life story?”");
+    if (!name) {
+        if(showError) playWizardDialogue(["“Who are you? The name field is empty.”"], 'sus');
+        isNameValid = false;
+    } else if (name.length > 10) {
+        if(showError) playWizardDialogue(["“Too long! Are you writing a novel?”"], 'sus');
+        isNameValid = false;
+    } else {
+        isNameValid = true;
+    }
+    updateButtonState();
+    return isNameValid;
   }
 
-  // ---- Code Spell Validation ----
-  function validateCodeSpell() {
-    const code = document.getElementById("codeSpell").value.trim().toUpperCase();
+  // B. Check Code Spell
+  function validateCodeSpell(showError = true) {
+    const code = document.getElementById("codeSpell").value.toUpperCase(); 
     const heroName = document.getElementById("mageName").value.trim().toUpperCase();
-    const specialCharPattern = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    
+    // Reset validity to check rules
+    isCodeValid = false;
 
-    let hints = [];
-    if (code.length < 15) hints.push("“Your secret is weak! Even a goblin could guess it.”");
-    if (/0/.test(code)) hints.push("“No zeros allowed, mortal!”");
-    if (/[AEIOU]/.test(code)) hints.push("“Vowels weaken the spell!”");
-    if (!specialCharPattern.test(code)) hints.push("“Where is your magical character?”");
-    if (code[6] !== "O") hints.push("“7th character must be 'O'!”");
-    if (code[12] !== "Y") hints.push("“13th character must be 'y'!”");
-    if (!code.includes(heroName)) hints.push("“Include your hero name in the spell!”");
+    // 0. Empty
+    if (!code) {
+        if(showError) playWizardDialogue(["“Where is the spell? Invisible ink?”"], 'sus');
+        updateButtonState(); return false;
+    }
 
-    if (hints.length > 0) showWizardDialogue(hints);
+    // Rule 1: No Numbers
+    if (/\d/.test(code)) {
+        if(showError) playWizardDialogue(["“Numbers are for accountants, not wizards!”", "“Remove them.”"], 'sus');
+        isCodeValid = false; // 🔴 IMPORTANT: Mark as invalid before updating button
+        updateButtonState(); 
+        return false;
+    }
+
+    // Rule 2: Length (15+)
+    if (code.length < 15) {
+        if(showError) playWizardDialogue(["“Too short! Your spell lacks power.”", "“Minimum 15 runes.”"], 'sus');
+        isCodeValid = false; // 🔴 IMPORTANT
+        updateButtonState(); 
+        return false;
+    }
+
+    // Rule 3: Special Character
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(code)) {
+        if(showError) playWizardDialogue(["“It needs a spark of chaos!”", "“Add a special symbol.”"], 'sus');
+        isCodeValid = false; // 🔴 IMPORTANT
+        updateButtonState(); 
+        return false;
+    }
+
+    // Rule 4: No Character > 2 times
+    const charCounts = {};
+    for (let char of code) {
+        charCounts[char] = (charCounts[char] || 0) + 1;
+        if (charCounts[char] > 2) {
+            if(showError) playWizardDialogue([`“You stutter! The rune '${char}' appears too often.”`, "“Max 2 times.”"], 'sus');
+            updateButtonState(); return false;
+        }
+    }
+
+    // Rule 5: No Vowel beside Vowel
+    if (/[AEIOU]{2,}/.test(code)) {
+        if(showError) playWizardDialogue(["“Vowels weaken the structure when clumped!”", "“Separate them.”"], 'sus');
+        updateButtonState(); return false;
+    }
+
+    // Rule 6: 7th Char = 'O'
+    if (code.length >= 7 && code[6] !== 'O') {
+        if(showError) playWizardDialogue(["“The 7th rune aligns the stars.”", "“It must be 'O'.”"], 'sus');
+        updateButtonState(); return false;
+    }
+
+    // Rule 7: 13th Char = 'Y'
+    if (code.length >= 13 && code[12] !== 'Y') {
+        if(showError) playWizardDialogue(["“The 13th rune seals the fate.”", "“It must be 'Y'.”"], 'sus');
+        updateButtonState(); return false;
+    }
+
+    // Rule 8: Include Name
+    if (/\d/.test(heroName)) {
+        if(showError) playWizardDialogue(["“Your name contains numbers!”", "“Fix your name first.”"], 'angry');
+        updateButtonState(); return false;
+    }
+    if (!code.includes(heroName)) {
+        if(showError) playWizardDialogue(["“A true wizard signs their work.”", "“Include your Name in the spell.”"], 'sus');
+        updateButtonState(); return false;
+    }
+
+    // ALL PASSED
+    isCodeValid = true;
+    updateButtonState();
+    return true;
   }
 
-  function validateConfirmCodeSpell() {
-    const code = document.getElementById("codeSpell").value.trim();
-    const confirm = document.getElementById("confirmCodeSpell").value.trim();
-    if (confirm && confirm !== code) showWizardDialogue("“Heh. No peeking, outsider.”");
-  }
 
-  // ---- Disable copy/paste on code spell inputs ----
-  const codeInputs = [document.getElementById("codeSpell"), document.getElementById("confirmCodeSpell")];
-  codeInputs.forEach(input => {
-    input.type = "password";
-    input.addEventListener("copy", e => { e.preventDefault(); showWizardDialogue("“Cheater! Magic cannot be copied.”"); });
-    input.addEventListener("paste", e => { e.preventDefault(); showWizardDialogue("“Try harder! Spells cannot be pasted.”"); });
+  // ==========================================
+  //  2. INPUT LISTENERS
+  // ==========================================
+
+  // Focus Blocking
+  document.getElementById("codeSpell").addEventListener("focus", function() {
+    if (!validateName(true)) this.blur();
   });
 
-  document.getElementById("mageName").addEventListener("blur", validateMageName);
-  document.getElementById("codeSpell").addEventListener("blur", validateCodeSpell);
-  document.getElementById("confirmCodeSpell").addEventListener("blur", validateConfirmCodeSpell);
+  document.getElementById("confirmCodeSpell").addEventListener("focus", function() {
+    if (!validateCodeSpell(true)) this.blur();
+  });
 
-  // ---- Form Submission ----
+  // No Paste
+  document.getElementById("confirmCodeSpell").addEventListener("paste", function(e) {
+    e.preventDefault();
+    playWizardDialogue(["“Cheater! Magic cannot be pasted.”"], 'angry');
+  });
+
+  // Validation on Leave
+  document.getElementById("mageName").addEventListener("blur", () => validateName(false)); 
+  document.getElementById("codeSpell").addEventListener("blur", () => validateCodeSpell(false));
+  
+  // Update button in real-time (to enable it for the troll trap)
+  document.getElementById("codeSpell").addEventListener("input", () => validateCodeSpell(false));
+
+
+  // ==========================================
+  //  3. SUBMIT LOGIC (The Troll)
+  // ==========================================
   form.addEventListener("submit", function(e) {
     e.preventDefault();
 
+    // Re-validate strictly before proceeding
+    if (!validateName(false) || !validateCodeSpell(false)) return;
+
+    const original = document.getElementById("codeSpell").value.toUpperCase();
+    const confirm = document.getElementById("confirmCodeSpell").value.toUpperCase();
+    const confirmInput = document.getElementById("confirmCodeSpell");
+
+    // ✨ TROLL LOGIC: Check Confirm on Submit
+    if (confirm !== original) {
+        confirmAttempts++;
+        confirmInput.value = ""; // Clear input immediately
+
+        if (confirmAttempts === 1) {
+            playWizardDialogue(["“Haha! Wrong!”"], 'sus');
+        } else {
+            // Random Troll Lines
+            const taunts = [
+                "“Ahh, lemme clear it again for you.”",
+                "“Are you frustrated?”",
+                "“Oops magic! Your input has gone again haha!”"
+            ];
+            const randomTaunt = taunts[Math.floor(Math.random() * taunts.length)];
+            
+            playWizardDialogue([randomTaunt], 'sus');
+        }
+        return;
+    }
+
+    // ✅ SUCCESS
     const mageName = document.getElementById("mageName").value.trim();
-    const codeSpell = document.getElementById("codeSpell").value.trim();
-    const confirmCodeSpell = document.getElementById("confirmCodeSpell").value.trim();
 
-    if (!mageName || !codeSpell || !confirmCodeSpell) {
-      showWizardDialogue("⚠️ FILL ALL FIELDS OR FACE THE CONSEQUENCES!");
-      return;
-    }
-
-    if (codeSpell !== confirmCodeSpell) {
-      showWizardDialogue("🔮 CODE SPELLS DO NOT MATCH!");
-      return;
-    }
-
-    showWizardDialogue([
-      "✨ Your spell is accepted!",
-      `Welcome, ${mageName}, to the Academy of True Magic!`
-    ]);
-
-    setTimeout(() => {
-      window.location.href = "../pages/thirdLevel.html";
-    }, 1500);
+    playWizardDialogue([
+      "✨ Hmph. Not bad.",
+      `“Your spell is... acceptable, ${mageName}.”`
+    ], 'calm', () => {
+        
+        // ✨ NEW SUCCESS MESSAGE
+        playSystemOverlay([
+            "Level 2 Cleared.",
+            "Remember your mage name and code spell, copy it or write it down."
+        ], () => {
+            window.location.href = "../pages/thirdLevel.html";
+        });
+        
+    });
   });
+
 });

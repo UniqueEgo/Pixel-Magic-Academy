@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Magic Academy</title>
   <link rel="stylesheet" href="../css/enroll.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/wizard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -34,19 +35,23 @@
       </form>
     </div>
   </div>
-  
-  <div class = "top-buttons">
-    <img src="/src/rmvback_button.png" id="backBtn" class="icon-button">
-    <img src="/src/restartbtn.png" id="restartbtn" class="icon-button">
+
+  <div id="dialogue-overlay" class="hidden">
+    <div class="overlay-bg"></div>
+    <div id="dialogue-box">
+      <p id="dialogue-text-enroll"></p>
+      <p class="click-note">(tap to continue)</p>
+    </div>
   </div>
 
+  <div id="wizard-click-layer" class="hidden"></div>
   
-<div class="wizard-box">
-  <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
-  <div id="wizard-dialogue" class="dialogue"></div>
-</div>
+  <div class="wizard-box" id="wizard-container" style="display:flex">
+    <div id="wizard-dialogue" class="dialogue"></div>
+    <img src="../src/wizard-idle.png" alt="wizard" class="wizard" id="wizard">
+  </div>
 
-
-  <script src="/js/enroll.js"></script>
+  <script src="../js/wizardManager.js"></script> 
+  <script src="../js/enroll.js"></script>
 </body>
 </html>

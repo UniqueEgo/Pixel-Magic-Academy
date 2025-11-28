@@ -5,22 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Magic Academy</title>
   <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/wizard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
+  
   <div class="container">
     <div class="card">
       <div class="header">
-        <h1><img src="../src/hat.png" alt="hat" class="icon"> MAGIC ACADEMY <img src="../src/hat.png" alt="hat" class="icon"></h1>
+        <h1><img src="/src/hat.png" alt="hat" class="icon"> MAGIC ACADEMY <img src="/src/hat.png" alt="hat" class="icon"></h1>
       </div>
 
       <form id="academyForm">
         <label for="mageName" class="label">
           📘 MAGE NAME:
         </label>
-        <input type="text" id="mageName" placeholder="ENTER YOUR NAME" autocomplete="off"  required>
+        <input type="text" id="mageName" placeholder="ENTER YOUR NAME" autocomplete="off" required>
 
         <label for="codeSpell" class="label">
           🔮 CODE SPELL:
@@ -35,20 +37,20 @@
 
   <div id="dialogue-overlay" class="hidden">
     <div class="overlay-bg"></div>
-
-    <div class="wizard-focus">
-      <img id="wizard" src="/src/wizard.png" class="wizard-big">
-    </div>
-
     <div id="dialogue-box">
       <p id="dialogue-text"></p>
-      <p class="click-note">(click to continue)</p>
+      <p class="click-note">(tap to continue)</p>
     </div>
   </div>
 
-  <img src="/src/wizard.png" alt="wizard" class="wizard">
+  <div id="wizard-click-layer" class="hidden"></div>
 
+  <div class="wizard-box" id="wizard-container" style="display:none">
+    <div id="wizard-dialogue" class="dialogue"></div>
+    <img src="/src/wizard-idle.png" alt="wizard" class="wizard" id="wizard">
+  </div>
 
-<script src="/js/index.js"></script>
+  <script src="/js/wizardManager.js"></script>
+  <script src="/js/index.js"></script>
 </body>
 </html>

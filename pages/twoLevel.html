@@ -3,28 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magic Academy</title>
+  <title>Magic Academy - Arcane Security</title>
   <link rel="stylesheet" href="../css/twoLevel.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="../css/wizard.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
   
   <div class="container">
-      <div class="rules-panel">
-        <h2>🧙‍♂️ Code Spell Rules</h2>
-        <ul>
-          <li>No "0"s</li>
-          <li>No vowels</li>
-          <li>Minimum 15 characters</li>
-          <li>At least one special character</li>
-          <li>7th character = "O"</li>
-          <li>13th character = "y"</li>
-          <li>Must include your Hero Name</li>
-        </ul>
-      </div>
-
     <div class="card">
       <div class="header">
         <h1>
@@ -39,21 +26,32 @@
         <input type="text" id="mageName" placeholder="ENTER YOUR MAGE NAME" autocomplete="off">
 
         <label for="codeSpell" class="label">📜 CODE SPELL:</label>
-        <input type="password" id="codeSpell" placeholder="WHAT IS YOUR CODE SPELL" autocomplete="off">
+        <input type="text" id="codeSpell" placeholder="CREATE YOUR SPELL" autocomplete="off">
 
-        <label for="confirmCodeSpell" class="label">🔮 CONFIRM CODE SPELL:</label>
+        <label for="confirmCodeSpell" class="label">🔮 CONFIRM SPELL:</label>
         <input type="password" id="confirmCodeSpell" placeholder="CONFIRM YOUR SPELL" autocomplete="off">
 
-        <button type="submit" class="btn enter">⭐ CAST SPELL!!! ⭐</button>
+        <button type="submit" class="btn enter" id="finalButton">⭐ CAST SPELL!!! ⭐</button>
       </form>
     </div>
   </div>
 
-  <div class="wizard-box">
-    <img src="/src/wizard.png" alt="wizard" class="wizard" id="wizard">
-    <div id="wizard-dialogue" class="dialogue"></div>
+  <div id="dialogue-overlay" class="hidden">
+    <div class="overlay-bg"></div>
+    <div id="dialogue-box">
+      <p id="dialogue-text-enroll"></p>
+      <p class="click-note">(tap to continue)</p>
+    </div>
   </div>
 
+  <div id="wizard-click-layer" class="hidden"></div>
+
+  <div class="wizard-box" id="wizard-container" style="display:flex">
+    <div id="wizard-dialogue" class="dialogue"></div>
+    <img src="../src/wizard-idle.png" alt="wizard" class="wizard" id="wizard">
+  </div>
+
+  <script src="../js/wizardManager.js"></script>
   <script src="../js/twoLevel.js"></script>
 </body>
 </html>

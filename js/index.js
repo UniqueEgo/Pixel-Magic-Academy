@@ -1,97 +1,129 @@
-// Dialogue System
-const overlay = document.getElementById("dialogue-overlay");
-const dialogueText = document.getElementById("dialogue-text");
-const wizard = document.getElementById("wizard"); // ← wizard image
+document.addEventListener("DOMContentLoaded", () => {
+  // Elements
+  const overlay = document.getElementById("dialogue-overlay");
+  const wizardContainer = document.getElementById("wizard-container");
 
-let dialogueLines = [];
-let currentLine = 0;
+  // Ideally, wizardManager.js handles the wizard elements, 
+  // but we need to hide the container initially for the Intro sequence.
+  wizardContainer.style.display = "none"; 
 
-let talkingInterval = null;
-
-// --- Wizard Animation: 3 Frames ---
-function startWizardTalking() {
-  const frames = [
-    "src/normal-talking-closed.png",
-    "src/normal-talking-half-open.png",
-    "src/normal-talking.png"
-  ];
+  // ============================================
+  //  SYSTEM OVERLAY (Narrator)
+  // ============================================
   
-  let index = 0;
+  function askSystemChoice(question, onYes, onNo) {
+    overlay.classList.remove("hidden");
+    const newBox = document.getElementById("dialogue-box");
+    const newText = document.getElementById("dialogue-text");
 
-  talkingInterval = setInterval(() => {
-    wizard.src = frames[index];
-    index = (index + 1) % frames.length;
-  }, 700 ); // speed of talking
-}
+    newText.textContent = `(System): ${question}`;
 
-function stopWizardTalking() {
-  clearInterval(talkingInterval);
-  wizard.src = "images/normal-talking-closed.png"; // return to idle
-}
+    // Create Buttons
+    const btnContainer = document.createElement("div");
+    btnContainer.className = "choice-container";
+    
+    // (Button creation logic same as before...)
+    const yesBtn = document.createElement("button"); yesBtn.innerText = "YES"; yesBtn.className = "choice-btn";
+    const noBtn = document.createElement("button"); noBtn.innerText = "NO"; noBtn.className = "choice-btn";
+    
+    btnContainer.appendChild(yesBtn); btnContainer.appendChild(noBtn);
+    const oldBtns = newBox.querySelector(".choice-container");
+    if(oldBtns) oldBtns.remove();
+    newBox.appendChild(btnContainer);
 
+    yesBtn.addEventListener("click", (e) => { e.stopPropagation(); btnContainer.remove(); onYes(); });
+    noBtn.addEventListener("click", (e) => { e.stopPropagation(); btnContainer.remove(); onNo(); });
+  }
 
-// --- Dialogue System ---
-function startDialogue(lines, callback = null) {
-  dialogueLines = lines;
-  currentLine = 0;
+  function playSystemNarrative(lines, onComplete) {
+    const textEl = document.getElementById("dialogue-text");
+    let currentIndex = 0;
 
-  overlay.classList.remove("hidden");
-  dialogueText.textContent = dialogueLines[currentLine];
-
-  startWizardTalking(); // ← START talking
-
-  function next() {
-    currentLine++;
-
-    if (currentLine < dialogueLines.length) {
-      dialogueText.textContent = dialogueLines[currentLine];
-    } else {
-      overlay.classList.add("hidden");
-      stopWizardTalking(); // ← STOP talking
-      overlay.removeEventListener("click", next);
-      if (callback) callback();
+    function showLine() {
+      textEl.textContent = `(System): ${lines[currentIndex]}`;
     }
+
+    function advance() {
+      currentIndex++;
+      if (currentIndex < lines.length) {
+        showLine();
+      } else {
+        overlay.classList.add("hidden");
+        overlay.removeEventListener("click", advance);
+        if (onComplete) onComplete();
+      }
+    }
+
+    showLine();
+    overlay.removeEventListener("click", advance);
+    overlay.addEventListener("click", advance);
   }
 
-  overlay.addEventListener("click", next);
-}
+  // ============================================
+  //  MAIN GAME FLOW
+  // ============================================
 
-
-// --- Auto Dialogue on Page Load ---
-window.addEventListener("load", () => {
-  startDialogue([
-    "Well, if you want to enter my Academy...",
-    "You'll have to enroll properly!",
-    "No shortcuts for isekai brats!"
-  ]);
-});
-
-
-// --- Form Interactivity ---
-document.getElementById("academyForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById("mageName").value.trim();
-  const spell = document.getElementById("codeSpell").value.trim();
-
-  if (!name || !spell) {
-    startDialogue([
-      "Hmm… You must enter BOTH your name and your spell."
-    ]);
-    return;
-  }
-
-  startDialogue([
-    "Heh. The Gate doesn’t accept strangers.",
-    "Enrollment is the ceremony, not a suggestion."
-  ]);
-});
-
-
-// --- Enroll Button ---
-const enrollBtn = document.getElementById("enrollBtn");
-if (enrollBtn) {
-  enrollBtn.addEventListener("click", function () {
-    window.location.href = "pages/enroll.html";
+  window.addEventListener("load", () => {
+    
+    // 1. Intro Choice
+    askSystemChoice("Are you new to this world?", 
+      () => { // YES
+        playSystemNarrative([
+          "Initializing synchronization...",
+          "You have successfully possessed a body within the Academy.",
+          "Login is required to blend in.",
+          "TIP: Tap anywhere to advance dialogue."
+        ], triggerWizardEntrance);
+      },
+      () => { // NO
+        playSystemNarrative([
+          "Very well. Initiating Login Sequence.",
+          "TIP: Tap anywhere to advance dialogue."
+        ], triggerWizardEntrance);
+      }
+    );
   });
-}
+
+  function triggerWizardEntrance() {
+    // 2. WELCOME -> MOOD: CALM
+    playWizardDialogue([
+      "Welcome to my Academy...",
+      "Hmm? You smell quite unfamiliar.",
+      "Come closer, let's get you enrolled."
+    ], 'calm');
+  }
+  
+  // --- Form Logic ---
+  const form = document.getElementById("academyForm");
+  if(form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("mageName").value.trim();
+        const spell = document.getElementById("codeSpell").value.trim();
+
+        // 3. ENTER ACADEMY (Validation) -> MOOD: ANGRY
+        if (!name || !spell) {
+          playWizardDialogue([
+            "No shortcuts for isekai brats!",
+            "You must enter both your name and your spell!"
+          ], 'angry'); 
+          return;
+        }
+
+        // 4. ENTER ACADEMY (Success) -> MOOD: ANGRY
+        playWizardDialogue([
+          "The Gate doesn’t accept strangers!",
+          "Enrollment is the ceremony, not a suggestion."
+        ], 'angry');
+      });
+  }
+  
+  // --- Enroll Button ---
+  const enrollBtn = document.getElementById("enrollBtn");
+  if (enrollBtn) {
+    enrollBtn.addEventListener("click", function () {
+      window.location.href = "pages/enroll.html";
+    });
+  }
+});

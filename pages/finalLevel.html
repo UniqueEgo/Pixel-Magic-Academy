@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magic Academy - Final Login</title>
-  <link rel="stylesheet" href="../css/thirdLevel.css">
-  <link rel="stylesheet" href="../css/wizard.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>Magic Academy - Final Captcha</title>
+  <link rel="stylesheet" href="../css/finalLevel.css">
+  <link rel="stylesheet" href="../css/wizard.css"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 </head>
@@ -16,40 +17,50 @@
       <div class="header">
         <h1>
           <img src="../src/hat.png" alt="hat" class="icon">
-          OFFICIAL LOGIN
+          SIMPLE CAPTCHA
           <img src="../src/wand.png" alt="wand" class="icon">
         </h1>
       </div>
 
-      <form id="academyForm">
-        <label for="loginName" class="label">🧙‍♂️ MAGE NAME:</label>
-        <input type="text" id="loginName" placeholder="ENTER YOUR REGISTERED NAME" autocomplete="off">
+      <!-- QUESTION CONTAINER -->
+      <div id="quiz-container">
+        <h2 id="question-text">Loading question...</h2>
+        <p id="question-counter">Question 1 / 10</p>
+        
+        <input type="text" id="answer-input" placeholder="YOUR ANSWER HERE" autocomplete="off">
+        
+        <button id="next-btn" class="btn enter">NEXT QUESTION ➡</button>
+      </div>
 
-        <label for="loginCode" class="label">📜 CODE SPELL:</label>
-        <input type="password" id="loginCode" placeholder="ENTER YOUR CODE SPELL" autocomplete="off">
+      <!-- FINAL SCORE CONTAINER (Hidden initially) -->
+      <div id="result-container" class="hidden">
+        <h2>CAPTCHA COMPLETE</h2>
+        <p id="final-score-text"></p>
+        <p id="final-feedback"></p>
+        <button id="finish-btn" class="btn enter">PROCEED ➡</button>
+      </div>
 
-        <button type="submit" class="btn enter">⭐ ENTER ACADEMY ⭐</button>
-        <button type="button" class="btn enroll" id="trapEnrollBtn">📖 ENROLL AS STUDENT</button>
-      </form>
     </div>
   </div>
 
+  <!-- System Overlay -->
   <div id="dialogue-overlay" class="hidden">
     <div class="overlay-bg"></div>
     <div id="dialogue-box">
-      <p id="dialogue-text-system"></p>
+      <p id="dialogue-text-final"></p>
       <p class="click-note">(tap to continue)</p>
     </div>
   </div>
 
   <div id="wizard-click-layer" class="hidden"></div>
 
+  <!-- Wizard Container -->
   <div class="wizard-box" id="wizard-container" style="display:flex">
     <div id="wizard-dialogue" class="dialogue"></div>
     <img src="../src/wizard-idle.png" alt="wizard" class="wizard" id="wizard">
   </div>
 
   <script src="../js/wizardManager.js"></script>
-  <script src="../js/thirdLevel.js"></script>
+  <script src="../js/finalLevel.js"></script>
 </body>
 </html>

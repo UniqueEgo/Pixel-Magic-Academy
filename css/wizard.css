@@ -1,0 +1,93 @@
+/* --- WIZARD CONTAINER (Floating Fixed) --- */
+.wizard-box {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  
+  /* Desktop Size */
+  width: 450px; 
+  height: 450px;
+  
+  z-index: 50;
+  display: flex;
+  align-items: flex-end; 
+  justify-content: center;
+  pointer-events: none; 
+}
+
+/* --- WIZARD IMAGE --- */
+.wizard {
+  width: 100%; 
+  height: auto;
+  pointer-events: auto; 
+  filter: drop-shadow(0 0 5px rgba(179, 140, 247, 0.5));
+}
+
+/* --- DIALOGUE BUBBLE --- */
+.dialogue {
+  background-color: #fff;
+  border: 3px solid #b38cf7;
+  border-radius: 20px;
+  padding: 15px 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 60; 
+  display: none; 
+  
+  position: absolute;
+  bottom: 95%; 
+  left: 0;
+  right: 0;
+  margin: 0 auto; 
+  max-width: 350px;
+}
+
+/* --- CLICK LAYER --- */
+#wizard-click-layer { position: fixed; inset: 0; z-index: 45; cursor: pointer; }
+#wizard-click-layer.hidden { display: none; }
+
+/* --- SYSTEM OVERLAY --- */
+#dialogue-overlay { position: fixed; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 9999; }
+#dialogue-overlay.hidden { display: none; }
+.overlay-bg { position: absolute; inset: 0; backdrop-filter: blur(5px) brightness(0.4); background: rgba(0, 0, 0, 0.4); }
+#dialogue-box { width: 100%; padding: 25px; background: rgba(20, 20, 20, 0.9); color: white; font-size: 22px; text-align: center; z-index: 5; border-top: 3px solid #b38cf7; }
+.choice-container { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+.choice-btn { background: transparent; border: 2px solid #b38cf7; color: #b38cf7; padding: 8px 25px; font-family: "Pixelify Sans", sans-serif; font-size: 20px; cursor: pointer; }
+
+/* --- 📱 MOBILE FIT (No Scroll) 📱 --- */
+@media (max-width: 768px) {
+  .wizard-box {
+    /* Shrink him down */
+    width: 200px; 
+    height: 200px;
+    right: 5px;
+    bottom: 5px;
+  }
+  
+  .dialogue {
+    font-size: 14px;
+    padding: 10px;
+    
+    /* ✨ FIX: Calculate exact available width so it fits perfectly */
+    /* 100vw (Screen Width) - 200px (Wizard) - 25px (Padding/Margins) */
+    width: calc(100vw - 225px); 
+    max-width: none; /* Remove the limit so it fills the space */
+    
+    /* Move bubble to the Left of wizard head */
+    bottom: 30%; 
+    left: auto;
+    right: 95%; /* Push it slightly closer/further from wizard */
+    margin-right: 10px; /* Small gap between bubble and wizard */
+  }
+}
+
+/* --- 📱 MOBILE KEYBOARD FIX (Global) 📱 --- */
+@media (max-width: 768px) {
+  /* When any input on the page is focused (typing), 
+     hide the wizard box so it doesn't block the view */
+  body:has(input:focus) .wizard-box {
+    display: none !important;
+  }
+}

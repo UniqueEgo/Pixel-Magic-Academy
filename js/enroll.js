@@ -1,84 +1,78 @@
+// Function definition
+function enableAutoSave(fieldIds) {
+  fieldIds.forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    // 1. LOAD: Check if we have saved data
+    const savedValue = sessionStorage.getItem(id);
+    if (savedValue) {
+      input.value = savedValue;
+    }
+
+    // 2. SAVE: Listen for typing
+    input.addEventListener("input", () => {
+      sessionStorage.setItem(id, input.value);
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  
+  // ✨ FIX: Actually turn on the AutoSave!
+  // Note: We don't save homeAddress because it transforms into a dropdown
+  enableAutoSave(["mageName", "codeSpell"]); 
 
   const form = document.getElementById("academyForm");
-  const wizard = document.getElementById("wizard");
-  const dialogue = document.getElementById("wizard-dialogue");
+  
+  // Overlay Elements (For System Messages)
+  const overlay = document.getElementById("dialogue-overlay");
+  const overlayText = document.getElementById("dialogue-text-enroll");
 
+  // Trackers
   let nameTalked = false;
-  let addressTalked = false;
-  let addressConverted = false;
+  let addressAttempts = 0; 
+  let addressConverted = false; 
 
+  // Inputs
   const firstNameInput = document.getElementById("mageName");
   const lastNameInput = document.getElementById("codeSpell");
-  let addressInput = document.getElementById("homeAddress");
 
-  let dialogueQueue = [];
+  const wizardCities = [
+    "Eldoria", "Stormspire", "Mistvale", "Ravenhold",
+    "Arcanum Reach", "Frostgarde", "Sunfire Haven",
+    "Grimwood Hollow", "Astral Dune Citadel"
+  ];
 
-  function showWizardDialogue(lines) {
-    if (!Array.isArray(lines)) lines = [lines];
-    dialogueQueue = [...lines];
-    showNextDialogue();
-  }
-
-  function showNextDialogue() {
-    if (dialogueQueue.length === 0) {
-      dialogue.style.display = "none";
-      wizard.src = "../src/wizard.png";
-      wizard.classList.remove("talking");
-      return;
-    }
-
-    const nextLine = dialogueQueue.shift();
-    wizard.src = "../src/evil-laugh-wizard-talk.png";
-    wizard.classList.add("talking");
-    dialogue.textContent = nextLine;
-    dialogue.style.display = "block";
-
-    // If this was the last line of the address dialogue, convert input
-    if (!addressConverted && addressTalked && dialogueQueue.length === 0) {
-      transformAddressToDropdown();
-      addressConverted = true;
-    }
-  }
-
-  wizard.addEventListener("click", showNextDialogue);
-
+  // --- 1. NAME CHECK (Calm) ---
   function checkNameDialogue() {
     if (nameTalked) return;
     const first = firstNameInput.value.trim();
     const last = lastNameInput.value.trim();
+    
     if (first !== "" && last !== "") {
       nameTalked = true;
-      showWizardDialogue([
+      playWizardDialogue([
         `“${first} ${last}? I’ve seen countless impostors using that name.”`,
         "At least pretend you belong to this realm."
-      ]);
+      ], 'calm');
     }
   }
 
+  // --- 2. ADDRESS TRANSFORMATION ---
   function transformAddressToDropdown() {
-    const oldInput = addressInput;
+    const currentInput = document.getElementById("homeAddress");
+    if (!currentInput) return;
+
     const select = document.createElement("select");
     select.id = "homeAddress";
-    select.className = oldInput.className;
+    select.className = currentInput.className;
 
     const defaultOption = document.createElement("option");
-    defaultOption.text = "CHOOSE YOUR REALM OF ORIGIN";
-    defaultOption.disabled = true; // cannot submit
+    defaultOption.text = "⬇️ SELECT YOUR REALM ⬇️";
+    defaultOption.disabled = true;
     defaultOption.selected = true;
     select.add(defaultOption);
-
-    const wizardCities = [
-      "Eldoria",
-      "Stormspire",
-      "Mistvale",
-      "Ravenhold",
-      "Arcanum Reach",
-      "Frostgarde",
-      "Sunfire Haven",
-      "Grimwood Hollow",
-      "Astral Dune Citadel"
-    ];
 
     wizardCities.forEach(c => {
       const option = document.createElement("option");
@@ -87,40 +81,109 @@ document.addEventListener("DOMContentLoaded", () => {
       select.add(option);
     });
 
-    oldInput.replaceWith(select);
-    addressInput = select; // update reference
+    currentInput.replaceWith(select);
+    addressConverted = true; 
   }
 
-  function checkAddressDialogue() {
-    if (addressTalked) return;
-    const address = addressInput.value.trim();
-    if (address !== "") {
-      addressTalked = true;
-      showWizardDialogue([
-        `“${address}? So vague! Is that a real place, or a story you made up?”`,
-        "You don’t even know the land you stand on, do you?",
-        "Fine… I’ll help you pick"
-      ]);
+  // --- 3. SYSTEM OVERLAY (Narrator) ---
+  function playSystemOverlay(lines, onComplete) {
+    let currentIndex = 0;
+    overlay.classList.remove("hidden");
+    
+    function updateText() {
+      overlayText.textContent = "(System): " + lines[currentIndex];
     }
+
+    function advance() {
+      currentIndex++;
+      if (currentIndex < lines.length) {
+        updateText();
+      } else {
+        overlay.classList.add("hidden");
+        overlay.removeEventListener("click", advance);
+        if (onComplete) onComplete();
+      }
+    }
+
+    updateText();
+    overlay.addEventListener("click", advance);
   }
 
+
+  // --- LISTENERS ---
   firstNameInput.addEventListener("blur", checkNameDialogue);
   lastNameInput.addEventListener("blur", checkNameDialogue);
-  addressInput.addEventListener("blur", checkAddressDialogue);
 
+
+  // --- SUBMIT LOGIC ---
   form.addEventListener("submit", function(e) {
-    e.preventDefault();
+    e.preventDefault(); 
 
     const first = firstNameInput.value.trim();
     const last = lastNameInput.value.trim();
-    const address = addressInput.value;
+    const currentAddressInput = document.getElementById("homeAddress");
+    const address = currentAddressInput.value.trim(); 
 
-    if (!first || !last || address === "CHOOSE YOUR REALM OF ORIGIN" || !address ) {
-        showWizardDialogue("⚠️ NO  FOOL! ALL THE FIELDS MUST BE FILLED!");
+    // 1. EMPTY FIELDS -> ANGRY
+    if (!first || !last || !address || address === "⬇️ SELECT YOUR REALM ⬇️") {
+        playWizardDialogue([
+          "⚠️ FILL ALL THE FIELDS, FOOL!",
+          "Do not waste my time!"
+        ], 'angry');
         return;
     }
 
-    window.location.href = "../pages/oneLevel.html";
+    const isValidCity = wizardCities.includes(address);
+
+    if (isValidCity) {
+        // ✅ SUCCESS
+        playSystemOverlay(
+            ["Don't make yourself so obvious..."], 
+            () => {
+                window.location.href = "../pages/oneLevel.html";
+            }
+        );
+
+    } else {
+        // ❌ FAIL LOGIC
+        addressAttempts++;
+
+        if (addressAttempts === 1) {
+            playWizardDialogue([
+              `“${address}? Never heard of it. Try again.”`
+            ], 'calm');
+            
+            if(currentAddressInput.tagName === "INPUT") currentAddressInput.value = ""; 
+        } 
+        else if (addressAttempts === 2) {
+            playWizardDialogue([
+              "“Are you just making up words? ONE LAST CHANCE.”"
+            ], 'calm');
+            
+            if(currentAddressInput.tagName === "INPUT") currentAddressInput.value = ""; 
+        } 
+        else if (addressAttempts >= 3) {
+            // ✨ 3. SEQUENCE TRIGGER ✨
+            
+            // Step A: Wizard gets Suspicious (Angry)
+            playWizardDialogue([
+                "“Enough! You are clearly lost!”", 
+                "Wait, are you really from here?!"
+            ], 'angry', () => {
+                
+                // Step B: System steps in to save you (Overlay)
+                // This runs AFTER the wizard finishes talking
+                playSystemOverlay([
+                    "Oh come on, here let me help you."
+                ], () => {
+                    
+                    // Step C: Action (Show Dropdown)
+                    // This runs AFTER the system message is clicked
+                    transformAddressToDropdown();
+                });
+            });
+        }
+    }
   });
 
 });

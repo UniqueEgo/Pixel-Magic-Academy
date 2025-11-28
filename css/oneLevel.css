@@ -9,16 +9,21 @@
 body {
   background-color: #e6def5;
   display: flex;
-  font-family: "Pixelify Sans", sans-serif;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  
+  /* ✨ STRICT FIT: No scrollbars */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .card {
@@ -27,181 +32,51 @@ body {
   border-radius: 6px;
   box-shadow: 0 4px 0 #c2b7e0;
   text-align: center;
-  width: auto;
-  height: auto;
-  padding: 20px;
+  
+  /* ✨ LANDSCAPE CARD */
+  width: 700px;
+  max-width: 95%;
+  padding: 30px;
+  max-height: 95vh;
 }
 
-.header {
-  background-color: #b6a0e6;
-  color: #fff;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: 3px;
-}
-
-.header h1 {
-  font-size: 40px;
-  font-family: "Pixelify Sans", sans-serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.label {
-  display: block;
-  text-align: left;
-  font-family: "Pixelify Sans", sans-serif;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-size: 30px;
-  color: #333;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  border: 2px solid #c2b7e0;
-  border-radius: 4px;
-  font-size: 30px;
-  font-family: "Pixelify Sans", sans-serif;
-  text-transform: uppercase;
-  outline: none;
-  transition: 0.3s;
-}
-
-input:focus {
-  border-color: #b38cf7;
-  background-color: #f3eaff;
-}
+/* Header & Inputs */
+.header { background-color: #b6a0e6; color: #fff; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 3px; }
+.header h1 { font-size: 40px; font-family: "Pixelify Sans", sans-serif; font-weight: 700; letter-spacing: 1px; }
+.label { display: block; text-align: left; font-family: "Pixelify Sans", sans-serif; margin-top: 15px; margin-bottom: 5px; font-size: 30px; color: #333; }
+.icon { height: 3em; width: auto; vertical-align: middle; }
+input { width: 100%; padding: 10px; border: 2px solid #c2b7e0; border-radius: 4px; font-size: 30px; font-family: "Pixelify Sans", sans-serif; text-transform: uppercase; outline: none; transition: 0.3s; }
+input:focus { border-color: #b38cf7; background-color: #f3eaff; }
 
 /* Buttons */
-.btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 4px;
-  font-size: 30px;
-  cursor: pointer;
-  transition: 0.2s;
+.btn { width: 100%; padding: 10px; margin-top: 15px; border: none; border-radius: 4px; font-size: 30px; cursor: pointer; transition: 0.2s; }
+.enter { background-color: #b38cf7; color: white; }
+.enter:hover { background-color: #a274f1; transform: scale(1.03); }
+
+/* --- DISABLED BUTTON STATE --- */
+.btn:disabled {
+  background-color: #ccc; /* Grey */
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.enter {
-  background-color: #b38cf7;
-  color: white;
-  font-family: "Pixelify Sans", sans-serif;
-
+.btn:disabled:hover {
+  background-color: #ccc;
+  transform: none;
 }
-
-.enter:hover {
-  background-color: #a274f1;
-  transform: scale(1.03);
-}
-
-.enroll {
-  background-color: #b5e0d1;
-  color: #333;
-  font-family: "Pixelify Sans", sans-serif;
-}
-
-.enroll:hover {
-  background-color: #a4d5c3;
-  transform: scale(1.03);
-}
-
-
-.icon {
-  height: 3em; /* same height as the text */
-  width: auto; /* keep image proportion */
-  vertical-align: middle;
-}
-
-/* Test&
-
-/* Wizard styles */
-.wizard-box {
-  position: fixed;
-  bottom: -20px;
-  right: 30px;
-  text-align: center;
-  width: 500px; /* important so both images align */
-  animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
-
-}
-
-.wizard {
-  width: 100%;
-  position: absolute; /* ensure both images stack exactly */
-  bottom: -20px;
-  right: 0;
-  transition: opacity 0.3s ease;
-  animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
-}
-
-.wizard.talking {
-  opacity: 1;
-  width: 100%;
-  position: absolute; /* ensure both images stack exactly */
-  bottom: -20px;
-
-}
-
-.wizard.normal {
-  animation: float 3s ease-in-out infinite;
-  opacity: 1;
-}
-
-.dialogue {
-  background-color: #fff;
-  border: 2px solid #b38cf7;
-  border-radius: 15px; /* more curved edges */
-  padding: 12px 16px;
-  font-size: 28px;
-  color: #333;
-  max-width: 220px;
-  position: absolute;
-  bottom: 220px; /* higher above wizard */
-  right: 0;
-  display: none;
-  box-shadow: 0 0 15px rgba(179, 140, 247, 0.4);
-  text-align: center;
-}
-
-.dialogue.show {
-  display: block;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  0% {opacity: 0; transform: translateY(10px);}
-  100% {opacity: 1; transform: translateY(0);}
-}
-
-.wizard.normal {
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes pulse {
-  0%, 100% { filter: drop-shadow(0 0 0px #b38cf7); }
-  50% { filter: drop-shadow(0 0 12px #b38cf7); }
-}
-
-/* Responsive */
-@media (max-width: 500px) {
+/* --- 📱 MOBILE LANDSCAPE FIT 📱 --- */
+@media (max-width: 768px) {
   .card {
-    width: 90%;
+    /* Move UP to make room for wizard feet */
+    transform: translateY(-40px);
+    padding: 15px;
   }
-
-  .wizard {
-    width: 100px;
-    right: 10px;
-  }
+  
+  .header h1 { font-size: 24px; }
+  .label { font-size: 16px; margin-top: 8px; }
+  input { font-size: 16px; padding: 6px; }
+  .btn { font-size: 16px; padding: 6px; margin-top: 8px; }
+  .icon { height: 2em; }
 }
