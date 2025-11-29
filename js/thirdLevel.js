@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   
   // 1. Retrieve Stored Credentials
+  // Note: "codeSpell" comes from the "Last Name" field in Enroll level.
   const storedName = sessionStorage.getItem("mageName") || "Unknown Mage";
   const storedCode = sessionStorage.getItem("codeSpell") || "";
 
@@ -10,6 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Overlay Elements
   const overlay = document.getElementById("dialogue-overlay");
   const overlayText = document.getElementById("dialogue-text-system");
+
+  // --- BLOCK PASTING (Anti-Cheat) ---
+  const codeInput = document.getElementById("loginCode");
+  if(codeInput) {
+      codeInput.addEventListener("paste", function(e) {
+          e.preventDefault();
+          playWizardDialogue(["“No copying! Recite the spell from memory!”"], 'angry');
+      });
+  }
 
   // --- SYSTEM OVERLAY ---
   function playSystemOverlay(lines, onComplete) {
@@ -53,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputName = document.getElementById("loginName").value.trim();
     const inputCode = document.getElementById("loginCode").value.trim(); 
 
-    // ✨ CHANGED: Check everything in Lowercase (Case Insensitive)
+    // Check Case Insensitive
     const isNameCorrect = inputName.toLowerCase() === storedName.toLowerCase();
     const isCodeCorrect = inputCode.toLowerCase() === storedCode.toLowerCase();
 
@@ -64,7 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "You really don't listen?",
             `Go back and copy your code spell, ${storedName}.`
         ], () => {
-            // Optional redirect logic could go here
+            // Optional: You can redirect them back to Enroll if they are truly stuck
+            // window.location.href = "../pages/enroll.html";
         });
         return;
     }
@@ -80,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "I'm a robot, remember?"
         ], () => {
             
-            // Redirect
+            // Redirect to Final Level
             window.location.href = "../pages/finalLevel.html";
         });
     });

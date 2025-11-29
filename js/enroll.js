@@ -4,13 +4,11 @@ function enableAutoSave(fieldIds) {
     const input = document.getElementById(id);
     if (!input) return;
 
-    // 1. LOAD: Check if we have saved data
     const savedValue = sessionStorage.getItem(id);
     if (savedValue) {
       input.value = savedValue;
     }
 
-    // 2. SAVE: Listen for typing
     input.addEventListener("input", () => {
       sessionStorage.setItem(id, input.value);
     });
@@ -19,13 +17,12 @@ function enableAutoSave(fieldIds) {
 
 document.addEventListener("DOMContentLoaded", () => {
   
-  // ✨ FIX: Actually turn on the AutoSave!
-  // Note: We don't save homeAddress because it transforms into a dropdown
+  // 1. Enable AutoSave
   enableAutoSave(["mageName", "codeSpell"]); 
 
   const form = document.getElementById("academyForm");
   
-  // Overlay Elements (For System Messages)
+  // Overlay Elements
   const overlay = document.getElementById("dialogue-overlay");
   const overlayText = document.getElementById("dialogue-text-enroll");
 
@@ -37,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inputs
   const firstNameInput = document.getElementById("mageName");
   const lastNameInput = document.getElementById("codeSpell");
+
+  // --- BLOCK PASTING (Anti-Cheat) ---
+  lastNameInput.addEventListener("paste", function(e) {
+      e.preventDefault();
+      playWizardDialogue(["“Type it yourself! Magic requires effort!”"], 'angry');
+  });
 
   const wizardCities = [
     "Eldoria", "Stormspire", "Mistvale", "Ravenhold",
@@ -109,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.addEventListener("click", advance);
   }
 
-
   // --- LISTENERS ---
   firstNameInput.addEventListener("blur", checkNameDialogue);
   lastNameInput.addEventListener("blur", checkNameDialogue);
@@ -133,9 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const isValidCity = wizardCities.includes(address);
+    // ✨ FIX: Case Insensitive Check (Eldoria == eldoria)
+    const isValidCity = wizardCities.some(city => city.toLowerCase() === address.toLowerCase());
 
     if (isValidCity) {
+        // Safe Save before leaving
+        sessionStorage.setItem("mageName", first);
+        sessionStorage.setItem("codeSpell", last);
+
         // ✅ SUCCESS
         playSystemOverlay(
             ["Don't make yourself so obvious..."], 
@@ -152,33 +159,23 @@ document.addEventListener("DOMContentLoaded", () => {
             playWizardDialogue([
               `“${address}? Never heard of it. Try again.”`
             ], 'calm');
-            
             if(currentAddressInput.tagName === "INPUT") currentAddressInput.value = ""; 
         } 
         else if (addressAttempts === 2) {
             playWizardDialogue([
               "“Are you just making up words? ONE LAST CHANCE.”"
             ], 'calm');
-            
             if(currentAddressInput.tagName === "INPUT") currentAddressInput.value = ""; 
         } 
         else if (addressAttempts >= 3) {
             // ✨ 3. SEQUENCE TRIGGER ✨
-            
-            // Step A: Wizard gets Suspicious (Angry)
             playWizardDialogue([
                 "“Enough! You are clearly lost!”", 
                 "Wait, are you really from here?!"
             ], 'angry', () => {
-                
-                // Step B: System steps in to save you (Overlay)
-                // This runs AFTER the wizard finishes talking
                 playSystemOverlay([
                     "Oh come on, here let me help you."
                 ], () => {
-                    
-                    // Step C: Action (Show Dropdown)
-                    // This runs AFTER the system message is clicked
                     transformAddressToDropdown();
                 });
             });

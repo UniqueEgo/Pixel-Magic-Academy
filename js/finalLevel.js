@@ -3,15 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- DATA: QUESTIONS ---
   const questions = [
     {
-      q: "What is the 143rd digit of Pi?",
-      a: ["6"], 
+      q: "What is the 143rd decimal digit of Pi?", // ✨ CLARIFIED QUESTION
+      a: ["5"], // ✨ FIXED: It is 5, not 6
       correct: "You memorized THAT? Did you swallow a calculator?!",
-      wrong: "Wrong! It is not ... I asked for the 143rd digit!"
+      wrong: "Wrong! It is not that number... I asked for the 143rd decimal!"
     },
     {
       q: "In Morse code, what is 'wizard'?",
       a: [".-- .. --.. .- .-. -.."], 
-      correct: "Dot dash dot dash… wow, did you beep your way here? Suspicious",
+      correct: "Dot dash dot dash… wow, did you beep your way here? Suspicious.",
       wrong: "Wrong! Beep boop? No. Even pigeons communicate better."
     },
     {
@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       q: "Rarest blood type?",
-      a: ["RH NULL", "RH-NULL", "GOLDEN BLOOD"], 
+      a: ["RH NULL", "RH-NULL", "GOLDEN BLOOD", "RHNULL"], 
       correct: "Rh Null… also known as Golden Blood. Are you a vampire?",
       wrong: "Wrong! That is common peasant blood. I asked for the RAREST!"
     },
     {
       q: "How many bones in a giraffe’s neck?",
       a: ["7", "SEVEN"],
-      correct: "7 bones! Same as humans… mind blown",
+      correct: "7 bones! Same as humans… mind blown.",
       wrong: "Wrong! It's not a dragon or a snake. It is surprisingly few."
     },
     {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       q: "Square root of 123456789 (3 decimals)?",
-      a: ["11111.111"],
+      a: ["11111.111", "11,111.111"], // ✨ ADDED: Comma support
       correct: "11111.111… wow, did your brain overheat?!",
       wrong: "LOL! That’s not even close. Numbers are your enemy."
     },
@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnContainer.appendChild(yesBtn);
     btnContainer.appendChild(noBtn);
     
+    // Remove old buttons if they exist to prevent duplicates
     const oldBtns = freshBox.querySelector(".choice-container");
     if(oldBtns) oldBtns.remove();
     
@@ -158,11 +159,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- HANDLE ANSWER ---
   nextBtn.addEventListener("click", () => {
-    // ✨ FIX: Case Insensitive Check (User Input -> Upper)
+    // Check Case Insensitive
     const userVal = input.value.trim().toUpperCase();
     const currentQ = questions[currentQIndex];
     
-    // Check Answer (Answers in array are already Upper)
+    // Check Answer
     let isCorrect = currentQ.a.includes(userVal);
     
     if (isCorrect) {
@@ -236,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Init
   loadQuestion();
   playSystemOverlay(["Final Trial: The Impossible Captcha.", "Prove you are... intelligent."]);
 
