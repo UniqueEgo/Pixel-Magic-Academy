@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const conOrb = document.getElementById("CON-ORB").value.trim();
     const reversedOrb = orb.split('').reverse().join('');
 
-    // ✨ UPDATED: Progressive Failure Logic
+    // UPDATED: Progressive Failure Logic
     if (conOrb !== reversedOrb) {
       conOrbAttempts++; // Increment failure count
 

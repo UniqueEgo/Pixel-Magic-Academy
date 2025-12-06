@@ -70,7 +70,7 @@
     font-size: 14px;
     padding: 10px;
     
-    /* ✨ FIX: Calculate exact available width so it fits perfectly */
+    /* FIX: Calculate exact available width so it fits perfectly */
     /* 100vw (Screen Width) - 200px (Wizard) - 25px (Padding/Margins) */
     width: calc(100vw - 225px); 
     max-width: none; /* Remove the limit so it fills the space */

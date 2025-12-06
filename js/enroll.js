@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // ✨ FIX: Case Insensitive Check (Eldoria == eldoria)
+    // FIX: Case Insensitive Check (Eldoria == eldoria)
     const isValidCity = wizardCities.some(city => city.toLowerCase() === address.toLowerCase());
 
     if (isValidCity) {
@@ -143,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.setItem("mageName", first);
         sessionStorage.setItem("codeSpell", last);
 
-        // ✅ SUCCESS
         playSystemOverlay(
             ["Don't make yourself so obvious..."], 
             () => {
@@ -152,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
     } else {
-        // ❌ FAIL LOGIC
         addressAttempts++;
 
         if (addressAttempts === 1) {
@@ -168,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(currentAddressInput.tagName === "INPUT") currentAddressInput.value = ""; 
         } 
         else if (addressAttempts >= 3) {
-            // ✨ 3. SEQUENCE TRIGGER ✨
+            // 3. SEQUENCE TRIGGER 
             playWizardDialogue([
                 "“Enough! You are clearly lost!”", 
                 "Wait, are you really from here?!"

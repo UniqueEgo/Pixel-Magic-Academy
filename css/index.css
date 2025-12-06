@@ -12,7 +12,7 @@ body {
   justify-content: center;
   align-items: center;
   
-  /* ✨ STRICT FIT: No scrollbars allowed */
+  /* STRICT FIT: No scrollbars allowed */
   height: 100vh;
   width: 100vw;
   overflow: hidden; 
@@ -34,7 +34,7 @@ body {
   box-shadow: 0 4px 0 #c2b7e0;
   text-align: center;
   
-  /* ✨ LANDSCAPE CARD */
+  /* LANDSCAPE CARD */
   width: 700px;
   max-width: 95%; /* Fits within screen width */
   padding: 30px;

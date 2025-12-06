@@ -1,5 +1,4 @@
 // --- CONFIGURATION: IMAGE PATHS (Absolute Paths) ---
-// Using "/src/..." ensures it works from index.html AND pages/enroll.html
 const WIZARD_ASSETS = {
   // 1. CALM MODE
   calmIdle: "/src/wizard-idle.png",

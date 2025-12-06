@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* ✨ STRICT FIT */
+  /* STRICT FIT */
   height: 100vh;
   width: 100vw;
   overflow: hidden;

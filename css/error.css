@@ -1,0 +1,72 @@
+
+/* --- RESET & LAYOUT --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    background-color: #000; 
+    color: #0f0; 
+    font-family: "Pixelify Sans", monospace; 
+    overflow: hidden; 
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+/* --- CENTER BOX (Always on top) --- */
+.center-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9); 
+    padding: 40px 60px;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 20px #0f0, inset 0 0 20px rgba(0, 255, 0, 0.2);
+    min-width: 300px;
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0px #003300;
+    letter-spacing: 2px;
+}
+
+p {
+    font-size: 20px;
+    opacity: 0.8;
+    margin-bottom: 30px;
+}
+
+button {
+    background: #0f0;
+    color: #000;
+    border: none;
+    padding: 15px 30px;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px #0f0;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+    transform: scale(1.05);
+}
+
+/* --- FLOATING CHARACTERS (Asteroids) --- */
+.asteroid {
+    position: absolute;
+    font-size: 24px;
+    color: #005500;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+    will-change: transform;
+}

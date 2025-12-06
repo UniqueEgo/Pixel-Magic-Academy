@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- DATA: QUESTIONS ---
   const questions = [
     {
-      q: "What is the 143rd decimal digit of Pi?", // ✨ CLARIFIED QUESTION
-      a: ["5"], // ✨ FIXED: It is 5, not 6
+      q: "What is the 143rd decimal digit of Pi?", 
+      a: ["5"], 
       correct: "You memorized THAT? Did you swallow a calculator?!",
       wrong: "Wrong! It is not that number... I asked for the 143rd decimal!"
     },
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       q: "Square root of 123456789 (3 decimals)?",
-      a: ["11111.111", "11,111.111"], // ✨ ADDED: Comma support
+      a: ["11111.111", "11,111.111"], 
       correct: "11111.111… wow, did your brain overheat?!",
       wrong: "LOL! That’s not even close. Numbers are your enemy."
     },

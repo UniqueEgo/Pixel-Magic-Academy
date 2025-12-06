@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Trackers
   let isNameValid = false;
   let isCodeValid = false;
-  let confirmAttempts = 0; // ✨ NEW: Count how many times they failed confirm
+  let confirmAttempts = 0; 
 
   submitBtn.disabled = true;
 
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- BUTTON STATE ---
   function updateButtonState() {
-    // ✨ Unlock button if Name and Code are valid. 
+    // Unlock button if Name and Code are valid. 
     // We DON'T check confirm here, so the user can click it and fail (Troll Mechanic).
     if (isNameValid && isCodeValid) {
         submitBtn.disabled = false;
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirm = document.getElementById("confirmCodeSpell").value.toUpperCase();
     const confirmInput = document.getElementById("confirmCodeSpell");
 
-    // ✨ TROLL LOGIC: Check Confirm on Submit
+    // TROLL LOGIC: Check Confirm on Submit
     if (confirm !== original) {
         confirmAttempts++;
         confirmInput.value = ""; // Clear input immediately
@@ -224,15 +224,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // ✅ SUCCESS
     const mageName = document.getElementById("mageName").value.trim();
 
     playWizardDialogue([
-      "✨ Hmph. Not bad.",
+      "Hmph. Not bad.",
       `“Your spell is... acceptable, ${mageName}.”`
     ], 'calm', () => {
         
-        // ✨ NEW SUCCESS MESSAGE
         playSystemOverlay([
             "Level 2 Cleared.",
             "Remember your mage name and code spell, copy it or write it down."
